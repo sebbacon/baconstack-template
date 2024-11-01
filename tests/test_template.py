@@ -7,6 +7,7 @@ from copier import run_copy
 import tempfile
 import shutil
 import signal
+from pathlib import Path
 
 
 @pytest.fixture
@@ -62,5 +63,68 @@ def test_flask_template(project_dir):
             process.wait()
 
     finally:
+        # Return to original directory
+        os.chdir(original_dir)
+
+
+@pytest.mark.skipif(
+    not os.getenv("DOKKU_HOST") or not os.getenv("TEST_DOMAIN"),
+    reason="DOKKU_HOST and TEST_DOMAIN environment variables required for deployment test"
+)
+def test_dokku_deployment(project_dir):
+    test_app_name = f"test-app-{int(time.time())}"  # Unique name for each test run
+    
+    # Generate project from template
+    run_copy(
+        ".",
+        project_dir,
+        data={
+            "project_name": test_app_name,
+            "framework": "flask",
+            "project_description": "Test Flask App",
+            "domain": f"{test_app_name}.{os.getenv('TEST_DOMAIN')}",
+            "author_name": "Test Author",
+            "author_email": "test@example.com",
+            "use_loki": False,
+        },
+        unsafe=True,
+        vcs_ref="HEAD",
+    )
+
+    # Change to project directory
+    original_dir = os.getcwd()
+    os.chdir(project_dir)
+
+    try:
+        # Initialize git repo
+        subprocess.run(["git", "init"], check=True)
+        subprocess.run(["git", "add", "."], check=True)
+        subprocess.run(["git", "config", "user.email", "test@example.com"], check=True)
+        subprocess.run(["git", "config", "user.name", "Test User"], check=True)
+        subprocess.run(["git", "commit", "-m", "Initial commit"], check=True)
+        
+        # Set up remote and deploy
+        subprocess.run(["just", "setup-remote"], check=True)
+        subprocess.run(["just", "deploy"], check=True)
+
+        # Wait for deployment to complete
+        time.sleep(30)  # Give it some time to deploy
+
+        # Test if the app is responding
+        url = f"https://{test_app_name}.{os.getenv('TEST_DOMAIN')}"
+        response = requests.get(url, timeout=30)
+        assert response.status_code == 200
+
+    finally:
+        try:
+            # Cleanup: Remove the test app from Dokku
+            subprocess.run([
+                "ssh",
+                os.getenv("DOKKU_HOST"),
+                f"dokku apps:destroy {test_app_name} --force"
+            ], check=True)
+        except subprocess.CalledProcessError:
+            print(f"Warning: Failed to cleanup test app {test_app_name}")
+        
         # Return to original directory
         os.chdir(original_dir)
