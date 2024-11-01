@@ -1,0 +1,83 @@
+# copier.yaml
+_min_copier_version: "8.0.0"
+_templates_suffix: ".jinja"
+_version: "0.1.0"
+
+# Project metadata
+project_name:
+  type: str
+  help: Your project name
+  validator: >-
+    {% if not project_name.isidentifier() %}
+    Project name must be a valid Python identifier
+    {% endif %}
+
+project_description:
+  type: str
+  help: A short description of your project
+  default: A Python web application
+
+author_name:
+  type: str
+  help: Your name
+  default: "Seb Bacon"
+
+author_email:
+  type: str
+  help: Your email
+  default: "seb.bacon@gmail.com"
+
+framework:
+  type: str
+  help: Which web framework to use
+  choices:
+    - fastapi
+    - flask
+    - django
+  default: fastapi
+
+domain:
+  type: str
+  help: Domain name for deployment
+  placeholder: myapp.example.com
+
+use_loki:
+  type: bool
+  help: Set up Loki logging
+  default: true
+
+# Tasks run after project creation
+_tasks:
+  - "uv venv --python 3.11"
+  - "uv pip install -e ."
+  - "uv pip install -e '.[dev]'" # Install dev dependencies
+  - "git init"
+  - "pre-commit install"
+  - "git add ."
+  - "pre-commit run --all-files || true" # Run pre-commit hooks but allow modifications without failing
+  - "git add ." # Stage modified files after pre-commit
+  - "pre-commit run --all-files" # Re-run to ensure no further issues
+  - "git commit -m 'Initial commit from template'"
+
+# Template copying configuration
+_exclude:
+  - "templates/*/src/**"
+  - "!templates/{{ framework }}/src/**"
+  - "!templates/common/**"
+
+_templates:
+  # Copy common files
+  - "templates/common/": "src/{{ project_name }}/"
+
+  # Copy framework-specific files using the selected framework
+  - "templates/{{ framework }}/src/": "src/"
+
+# Files to skip during updates
+_answers_file: .copier-answers.yml
+_skip_if_exists:
+  - pyproject.toml
+  - src/*
+
+# Tasks to run after template updates
+_tasks_post_update:
+  - "just version" # Show new version after update

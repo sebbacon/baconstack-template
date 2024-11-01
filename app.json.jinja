@@ -1,0 +1,41 @@
+{
+  "name": "{{project_name}}",
+  "description": "{{project_description}}",
+  "keywords": [],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "environments": {
+    "review": {
+      "addons": []
+    }
+  },
+  "healthchecks": {
+    "web": [
+      {
+        "type": "startup",
+        "name": "web check",
+        "description": "Checking if web server is up",
+        "path": "/health",
+        "attempts": 3,
+        "interval": "10s",
+        "timeout": "5s"
+      }
+    ]
+  },
+  "cron": [
+    {
+      "command": "curl -fsS --retry 3 {{healthcheck_url}} > /dev/null 2>&1",
+      "schedule": "*/30 * * * *"
+    }
+  ],
+  "predeploy": {
+    "sample": "echo 'This runs before deployment'"
+  },
+  "dokku": {
+    "apt-packages": ["ffmpeg", "imagemagick"]
+  }
+}

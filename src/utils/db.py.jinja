@@ -1,0 +1,41 @@
+# src/utils/db.py
+from urllib.parse import urlparse
+import os
+from pathlib import Path
+
+
+def parse_database_url(url: str) -> str:
+    """
+    Parse DATABASE_URL and return a sqlite3-compatible path.
+    Handles both SQLAlchemy-style and direct URLs.
+
+    Examples:
+        sqlite:////app/data/myapp.db -> /app/data/myapp.db
+        sqlite:///./data/myapp.db -> ./data/myapp.db
+    """
+    parsed = urlparse(url)
+
+    if parsed.scheme != "sqlite":
+        raise ValueError(f"Unsupported database type: {parsed.scheme}")
+
+    # Handle SQLAlchemy-style URLs
+    if parsed.path.startswith("////"):
+        path = parsed.path[4:]
+    elif parsed.path.startswith("///"):
+        path = parsed.path[3:]
+    else:
+        path = parsed.path
+
+    # Ensure directory exists
+    Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
+
+    return path
+
+
+def get_database_path() -> str:
+    """Get database path from DATABASE_URL environment variable"""
+    database_url = os.getenv("DATABASE_URL")
+    if not database_url:
+        raise ValueError("DATABASE_URL environment variable not set")
+
+    return parse_database_url(database_url)

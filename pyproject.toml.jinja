@@ -1,0 +1,37 @@
+[project]
+name = "{{ project_name }}"
+version = "0.1.0"
+description = "{{ project_description }}"
+authors = [
+    { name = "{{ author_name }}", email = "{{ author_email }}" }
+]
+dependencies = [
+    {% if framework == "fastapi" %}
+    "fastapi>=0.109.0",
+    "uvicorn>=0.27.0",
+    {% elif framework == "flask" %}
+    "flask>=3.0.0",
+    "gunicorn>=21.2.0",
+    {% elif framework == "django" %}
+    "django>=5.0.0",
+    "gunicorn>=21.2.0",
+    {% endif %}
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.2.0",
+    "aider-chat>=0.18.0",
+    "pre-commit>=3.6.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# This ensures the package is installed in editable mode
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
