@@ -4,7 +4,7 @@ install:
     source .venv/bin/activate
     just requirements
     uv pip install -e ".[dev]"
-    
+
 requirements:
     #!/usr/bin/env bash
     # Generate requirements.txt from pyproject.toml
@@ -63,10 +63,13 @@ logs:
     ssh {{dokku_host}} dokku logs {{project_name}} -t
 
 setup-remote:
-    webstack setup {{project_name}} {{domain}}
+    baconstack setup {{project_name}} {{domain}}
+    git remote add dokku dokku@bacon.boutique:{{project_name}}
+    git push --set-upstream dokku main
+    git push dokku
 
 setup-loki:
-    webstack setup-loki {{project_name}}
+    baconstack setup-loki {{project_name}}
 
 # Database
 migrate:
