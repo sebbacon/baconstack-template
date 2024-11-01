@@ -1,0 +1,6 @@
+auto-commits: true
+model: claude-3-5-sonnet-20241022
+
+cache-prompts: true
+cache-keepalive-pings: 3
+
