@@ -51,8 +51,8 @@ template-version:
     echo "Current template version: ${current_version}"
 
 template-bump part="patch":
-    # Bump version using bump2version
-    bump2version {{ '{{part}}' }} --allow-dirty
+    # Bump version using bump2version with template config
+    bump2version {{ '{{part}}' }} --allow-dirty --config-file .bumpversion.template.cfg
     echo "Run 'git push && git push --tags' to publish"
 
 # Deployment
