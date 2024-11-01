@@ -68,7 +68,11 @@ _templates:
   - "templates/common/": "src/{{ project_name }}/"
 
   # Copy framework-specific files using the selected framework
+  {%- if framework == "fastapi" %}
+  - "templates/fastapi/src/main.py.jinja": "src/{{ project_name }}/main.py"
+  {%- else %}
   - "templates/{{ framework }}/src/app.py.jinja": "src/{{ project_name }}/app.py"
+  {%- endif %}
 
 # Files to skip during updates
 _answers_file: .copier-answers.yml

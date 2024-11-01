@@ -13,7 +13,7 @@ requirements:
 
 dev:
     {%- if framework == "fastapi" %}
-    uvicorn src.main:app --reload
+    uvicorn src.{{ project_name }}.main:app --reload
     {%- else %}
     flask --app src.{{ project_name }}.app run --debug
     {%- endif %}
