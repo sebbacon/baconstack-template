@@ -1,9 +1,10 @@
 # Development
 install:
     uv venv --python 3.11
-    uv pip install -e ".[dev]"
+    source .venv/bin/activate
     just requirements
-
+    uv pip install -e ".[dev]"
+    
 requirements:
     #!/usr/bin/env bash
     # Generate requirements.txt from pyproject.toml
@@ -13,9 +14,9 @@ requirements:
 
 dev:
     {%- if framework == "fastapi" %}
-    uvicorn src.{{ project_name }}.main:app --reload
+    uvicorn src.main:app --reload
     {%- else %}
-    flask --app src.{{ project_name }}.app run --debug
+    flask --app src.app run --debug -p 8001
     {%- endif %}
 
 # Testing and linting
