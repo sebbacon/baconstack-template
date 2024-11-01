@@ -68,7 +68,7 @@ _templates:
   - "templates/common/": "src/{{ project_name }}/"
 
   # Copy framework-specific files using the selected framework
-  - "templates/{{ framework }}/src/": "src/"
+  - "templates/{{ framework }}/src/app.py.jinja": "src/{{ project_name }}/app.py"
 
 # Files to skip during updates
 _answers_file: .copier-answers.yml
