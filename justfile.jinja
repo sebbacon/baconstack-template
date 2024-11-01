@@ -3,7 +3,11 @@ install:
     uv pip install -e ".[dev]"
 
 dev:
+    {% if framework == "fastapi" %}
     uvicorn src.main:app --reload
+    {% else %}
+    flask --app src.app run --debug
+    {% endif %}
 
 # Testing and linting
 test:
