@@ -51,6 +51,7 @@ _tasks:
   - "uv venv --python 3.11"
   - "uv pip install -e ."
   - "uv pip install -e '.[dev]'" # Install dev dependencies
+  - "just requirements"  # Generate requirements.txt
   - "git init"
   - "pre-commit install"
   - "git add ."

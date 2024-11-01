@@ -1,6 +1,15 @@
 # Development
 install:
+    uv venv --python 3.11
     uv pip install -e ".[dev]"
+    just requirements
+
+requirements:
+    #!/usr/bin/env bash
+    # Generate requirements.txt from pyproject.toml
+    uv pip compile pyproject.toml -o requirements.txt
+    # Generate requirements-dev.txt from pyproject.toml including dev dependencies
+    uv pip compile pyproject.toml --all-extras -o requirements-dev.txt
 
 dev:
     {%- if framework == "fastapi" %}
