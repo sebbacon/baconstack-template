@@ -69,11 +69,11 @@ def test_flask_template(project_dir):
 
 @pytest.mark.skipif(
     not os.getenv("DOKKU_HOST") or not os.getenv("TEST_DOMAIN"),
-    reason="DOKKU_HOST and TEST_DOMAIN environment variables required for deployment test"
+    reason="DOKKU_HOST and TEST_DOMAIN environment variables required for deployment test",
 )
 def test_dokku_deployment(project_dir):
-    test_app_name = f"test_app_{int(time.time())}"  # Unique name for each test run
-    
+    test_app_name = f"testapp{int(time.time())}"  # Unique name for each test run
+
     # Generate project from template
     run_copy(
         ".",
@@ -96,13 +96,7 @@ def test_dokku_deployment(project_dir):
     os.chdir(project_dir)
 
     try:
-        # Initialize git repo
-        subprocess.run(["git", "init"], check=True)
-        subprocess.run(["git", "add", "."], check=True)
-        subprocess.run(["git", "config", "user.email", "test@example.com"], check=True)
-        subprocess.run(["git", "config", "user.name", "Test User"], check=True)
-        subprocess.run(["git", "commit", "-m", "Initial commit"], check=True)
-        
+
         # Set up remote and deploy
         subprocess.run(["just", "setup-remote"], check=True)
         subprocess.run(["just", "deploy"], check=True)
@@ -118,13 +112,17 @@ def test_dokku_deployment(project_dir):
     finally:
         try:
             # Cleanup: Remove the test app from Dokku
-            subprocess.run([
-                "ssh",
-                os.getenv("DOKKU_HOST"),
-                f"dokku apps:destroy {test_app_name} --force"
-            ], check=True)
+            subprocess.run(
+                [
+                    "ssh",
+                    "seb@" + os.getenv("DOKKU_HOST"),
+                    f"dokku apps:destroy {test_app_name}",
+                    "--force",
+                ],
+                check=True,
+            )
         except subprocess.CalledProcessError:
             print(f"Warning: Failed to cleanup test app {test_app_name}")
-        
+
         # Return to original directory
         os.chdir(original_dir)

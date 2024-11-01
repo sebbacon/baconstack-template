@@ -8,6 +8,10 @@ dependencies = []
 
 [tool.uv]
 dev-dependencies = [
+    "baconstack",
     "copier>=9.4.1",
     "pytest>=8.3.3",
 ]
+
+[tool.uv.sources]
+baconstack = { git = "https://github.com/sebbacon/baconstack" }
