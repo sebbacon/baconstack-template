@@ -61,6 +61,7 @@ _answers_file: .copier-answers.yml
 _skip_if_exists:
   - pyproject.toml
   - src/*
+  - Procfile
 
 # Tasks to run after template updates
 _tasks_post_update:

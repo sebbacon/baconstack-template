@@ -1,0 +1,7 @@
+{%- if framework == "fastapi" %}
+web: uvicorn src.main:app --host 0.0.0.0 --port $PORT
+{%- elif framework == "flask" %}
+web: gunicorn src.app:app --bind 0.0.0.0:$PORT
+{%- elif framework == "django" %}
+web: gunicorn {{ project_name }}.wsgi:application --bind 0.0.0.0:$PORT
+{%- endif %}
