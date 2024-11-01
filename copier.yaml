@@ -7,7 +7,7 @@ _version: "0.1.0"
 project_name:
   type: str
   help: Your project name
-  validator: >-
+  validator: |
     {% if not project_name.isidentifier() %}
     Project name must be a valid Python identifier
     {% endif %}
@@ -60,19 +60,20 @@ _tasks:
 # Template copying configuration
 _exclude:
   - "templates/*/src/**"
-  - "!templates/{{ framework }}/src/**"
+  - "!templates/[[ framework ]]/src/**"
   - "!templates/common/**"
 
 _templates:
   # Copy common files
-  - "templates/common/": "src/{{ project_name }}/"
+  - "templates/common/": "src/[[ project_name ]]/"
 
   # Copy framework-specific files using the selected framework
-  {%- if framework == "fastapi" %}
-  - "templates/fastapi/src/main.py.jinja": "src/{{ project_name }}/main.py"
-  {%- else %}
-  - "templates/{{ framework }}/src/app.py.jinja": "src/{{ project_name }}/app.py"
-  {%- endif %}
+  - when: framework == "fastapi"
+    src: "templates/fastapi/src/main.py.jinja"
+    dst: "src/[[ project_name ]]/main.py"
+  - when: framework != "fastapi"
+    src: "templates/[[ framework ]]/src/app.py.jinja"
+    dst: "src/[[ project_name ]]/app.py"
 
 # Files to skip during updates
 _answers_file: .copier-answers.yml
