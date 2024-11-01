@@ -34,7 +34,7 @@ framework:
     - fastapi
     - flask
     - django
-  default: fastapi
+  default: flask
 
 domain:
   type: str
@@ -49,7 +49,7 @@ use_loki:
 # Tasks run after project creation
 _tasks:
   - "git init"
-  - "just install"  # This will create venv, install deps and generate requirements
+  - "just install" # This will create venv, install deps and generate requirements
   - "pre-commit install"
   - "git add ."
   - "pre-commit run --all-files || true" # Run pre-commit hooks but allow modifications without failing
