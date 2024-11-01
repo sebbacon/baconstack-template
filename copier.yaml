@@ -57,25 +57,6 @@ _tasks:
   - "pre-commit run --all-files" # Re-run to ensure no further issues
   - "git commit -m 'Initial commit from template'"
 
-# Template copying configuration
-_exclude:
-  - "templates"
-  - "!templates/[[ framework ]]/src/**"
-  - "!templates/common/**"
-
-_templates:
-  # Copy common files
-  - "templates/common/": "src/[[ project_name ]]/"
-
-  # Copy framework-specific files using the selected framework
-  - when: framework == "fastapi"
-    src: "templates/fastapi/src/main.py.jinja"
-    dst: "src/[[ project_name ]]/main.py"
-  - when: framework == "flask"
-    src: "templates/flask/src/app.py.jinja"
-    dst: "src/[[ project_name ]]/app.py"
-
-# Files to skip during updates
 _answers_file: .copier-answers.yml
 _skip_if_exists:
   - pyproject.toml

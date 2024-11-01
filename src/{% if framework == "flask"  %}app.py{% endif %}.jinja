@@ -1,0 +1,50 @@
+from datetime import datetime
+from flask import Flask, jsonify
+import sqlite3
+import os
+from .config import settings
+from .utils.db import get_database_path
+
+app = Flask(__name__)
+start_time = datetime.now()
+
+
+def check_database():
+    """Check database connectivity"""
+    try:
+        db_path = get_database_path()
+        conn = sqlite3.connect(db_path)
+        try:
+            conn.execute("SELECT 1")
+            return "healthy"
+        finally:
+            conn.close()
+    except Exception as e:
+        return f"unhealthy: {str(e)}"
+
+
+@app.route("/health")
+def health_check():
+    """Health check endpoint"""
+    is_healthy = True
+    db_status = check_database()
+
+    response = {
+        "status": "healthy" if is_healthy else "unhealthy",
+        "version": os.getenv("APP_VERSION", "0.1.0"),
+        "timestamp": datetime.now().isoformat(),
+        "database": db_status,
+        "uptime_seconds": (datetime.now() - start_time).total_seconds(),
+    }
+
+    status_code = 200 if is_healthy else 503
+    return jsonify(response), status_code
+
+
+@app.route("/")
+def root():
+    return {"message": "Welcome to {{ project_name }}"}
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
