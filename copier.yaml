@@ -71,8 +71,8 @@ _templates:
   - when: framework == "fastapi"
     src: "templates/fastapi/src/main.py.jinja"
     dst: "src/[[ project_name ]]/main.py"
-  - when: framework != "fastapi"
-    src: "templates/[[ framework ]]/src/app.py.jinja"
+  - when: framework == "flask"
+    src: "templates/flask/src/app.py.jinja"
     dst: "src/[[ project_name ]]/app.py"
 
 # Files to skip during updates
