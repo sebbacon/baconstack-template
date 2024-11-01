@@ -51,6 +51,7 @@ _tasks:
   - "uv venv --python 3.11"
   - "uv pip install -e ."
   - "uv pip install -e '.[dev]'" # Install dev dependencies
+  - "{% if framework == 'flask' %}uv pip install flask{% endif %}"
   - "git init"
   - "pre-commit install"
   - "git add ."
