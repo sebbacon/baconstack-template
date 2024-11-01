@@ -3,7 +3,7 @@ import subprocess
 import time
 import requests
 import pytest
-from copier import copy
+from copier import run_copy
 import tempfile
 import shutil
 import signal
@@ -20,7 +20,7 @@ def project_dir():
 
 def test_flask_template(project_dir):
     # Generate project from template
-    copy(
+    run_copy(
         ".",
         project_dir,
         data={
