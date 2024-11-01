@@ -47,7 +47,7 @@ bump part="patch":
 template-version:
     #!/usr/bin/env bash
     # Get the current version from copier.yml
-    current_version=$(grep -m1 "_version: " copier.yaml | cut -d'"' -f2)
+    current_version=$(grep -m1 "_version: " copier.yml | cut -d'"' -f2)
     echo "Current template version: ${current_version}"
 
 template-bump part="patch":
