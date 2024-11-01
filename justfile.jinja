@@ -3,11 +3,11 @@ install:
     uv pip install -e ".[dev]"
 
 dev:
-    {% if framework == "fastapi" %}
+    {%- if framework == "fastapi" %}
     uvicorn src.main:app --reload
-    {% else %}
+    {%- else %}
     flask --app src.app run --debug
-    {% endif %}
+    {%- endif %}
 
 # Testing and linting
 test:
@@ -80,15 +80,15 @@ setup-loki:
 
 # Database
 migrate:
-    {% if framework == "django" %}
+    {%- if framework == "django" %}
     python manage.py migrate
-    {% else %}
+    {%- else %}
     alembic upgrade head
-    {% endif %}
+    {%- endif %}
 
 makemigrations:
-    {% if framework == "django" %}
+    {%- if framework == "django" %}
     python manage.py makemigrations
-    {% else %}
+    {%- else %}
     alembic revision --autogenerate -m "{{migration_message}}"
-    {% endif %}
+    {%- endif %}
