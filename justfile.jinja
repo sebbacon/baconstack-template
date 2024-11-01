@@ -40,7 +40,7 @@ version:
 
 bump part="patch":
     # Bump version using bump2version
-    bump2version {{part}} --allow-dirty
+    bump2version {{ '{{part}}' }} --allow-dirty
     echo "Run 'git push && git push --tags' to publish"
 
 # For template repository only
@@ -52,7 +52,7 @@ template-version:
 
 template-bump part="patch":
     # Bump version using bump2version
-    bump2version {{part}} --allow-dirty
+    bump2version {{ '{{part}}' }} --allow-dirty
     echo "Run 'git push && git push --tags' to publish"
 
 # Deployment
