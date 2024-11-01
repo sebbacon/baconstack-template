@@ -15,7 +15,7 @@ dev:
     {%- if framework == "fastapi" %}
     uvicorn src.main:app --reload
     {%- else %}
-    flask --app src.app run --debug
+    flask --app src.{{ project_name }}.app run --debug
     {%- endif %}
 
 # Testing and linting
