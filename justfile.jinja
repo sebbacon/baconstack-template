@@ -39,18 +39,8 @@ version:
     echo "Current version: ${current_version}"
 
 bump part="patch":
-    #!/usr/bin/env bash
-    # Get the current version from pyproject.toml
-    current_version=$(grep -m1 "version = " pyproject.toml | cut -d'"' -f2)
-    # Calculate new version using standard-version
-    new_version=$(standard-version --dry-run --skip.commit --skip.tag --release-as {{part}} | grep "tagging" | cut -d' ' -f4)
-    # Update pyproject.toml
-    sed -i "s/version = \"${current_version}\"/version = \"${new_version}\"/" pyproject.toml
-    # Create git tag
-    git add pyproject.toml
-    git commit -m "chore: bump version to ${new_version}"
-    git tag -a "v${new_version}" -m "version ${new_version}"
-    echo "Bumped version to ${new_version}"
+    # Bump version using bump2version
+    bump2version {{part}} --allow-dirty
     echo "Run 'git push && git push --tags' to publish"
 
 # For template repository only
@@ -61,18 +51,8 @@ template-version:
     echo "Current template version: ${current_version}"
 
 template-bump part="patch":
-    #!/usr/bin/env bash
-    # Get the current version from copier.yml
-    current_version=$(grep -m1 "_version: " copier.yml | cut -d'"' -f2)
-    # Calculate new version using standard-version
-    new_version=$(standard-version --dry-run --skip.commit --skip.tag --release-as {{part}} | grep "tagging" | cut -d' ' -f4)
-    # Update copier.yml
-    sed -i "s/_version: \"${current_version}\"/_version: \"${new_version}\"/" copier.yml
-    # Create git tag
-    git add copier.yml
-    git commit -m "chore: bump template version to ${new_version}"
-    git tag -a "v${new_version}" -m "template version ${new_version}"
-    echo "Bumped template version to ${new_version}"
+    # Bump version using bump2version
+    bump2version {{part}} --config-file .bumpversion.cfg --allow-dirty
     echo "Run 'git push && git push --tags' to publish"
 
 # Deployment
