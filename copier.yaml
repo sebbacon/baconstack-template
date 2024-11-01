@@ -48,11 +48,8 @@ use_loki:
 
 # Tasks run after project creation
 _tasks:
-  - "uv venv --python 3.11"
-  - "uv pip install -e ."
-  - "uv pip install -e '.[dev]'" # Install dev dependencies
-  - "just requirements"  # Generate requirements.txt
   - "git init"
+  - "just install"  # This will create venv, install deps and generate requirements
   - "pre-commit install"
   - "git add ."
   - "pre-commit run --all-files || true" # Run pre-commit hooks but allow modifications without failing
