@@ -59,7 +59,7 @@ _tasks:
 
 # Template copying configuration
 _exclude:
-  - "templates/*/src/**"
+  - "templates"
   - "!templates/[[ framework ]]/src/**"
   - "!templates/common/**"
 
