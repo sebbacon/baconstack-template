@@ -63,7 +63,7 @@ logs:
     ssh {{dokku_host}} dokku logs {{project_name}} -t
 
 setup-remote:
-    webstack setup {{ '{{project_name}}' }} {{ '{{domain}}' }}
+    webstack setup {{project_name}} {{domain}}
 
 setup-loki:
     webstack setup-loki {{project_name}}
