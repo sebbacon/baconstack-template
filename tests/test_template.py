@@ -72,7 +72,7 @@ def test_flask_template(project_dir):
     reason="DOKKU_HOST and TEST_DOMAIN environment variables required for deployment test"
 )
 def test_dokku_deployment(project_dir):
-    test_app_name = f"test-app-{int(time.time())}"  # Unique name for each test run
+    test_app_name = f"test_app_{int(time.time())}"  # Unique name for each test run
     
     # Generate project from template
     run_copy(
