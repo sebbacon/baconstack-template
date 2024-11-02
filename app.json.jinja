@@ -27,15 +27,11 @@
     ]
   },
   "cron": [
-    {
-      "command": "curl -fsS --retry 3 {{healthcheck_url}} > /dev/null 2>&1",
-      "schedule": "*/30 * * * *"
-    }
   ],
   "predeploy": {
     "sample": "echo 'This runs before deployment'"
   },
   "dokku": {
-    "apt-packages": ["ffmpeg", "imagemagick"]
+    "apt-packages": []
   }
 }
