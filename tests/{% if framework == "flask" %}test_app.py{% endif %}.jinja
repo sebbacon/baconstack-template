@@ -41,3 +41,46 @@ def test_health_check(client):
     assert isinstance(data['status'], str)
     assert isinstance(data['version'], str)
     assert isinstance(data['database'], str)
+import json
+import pytest
+from datetime import datetime
+from src.app import app
+
+
+@pytest.fixture
+def client():
+    """Create a test client for the Flask app"""
+    app.config['TESTING'] = True
+    with app.test_client() as client:
+        yield client
+
+
+def test_root_endpoint(client):
+    """Test the root endpoint returns the expected welcome message"""
+    response = client.get('/')
+    assert response.status_code == 200
+    data = json.loads(response.data)
+    assert data['message'] == 'Welcome to {{ project_name }}'
+
+
+def test_health_check(client):
+    """Test the health check endpoint returns expected structure"""
+    response = client.get('/health')
+    assert response.status_code == 200
+    data = json.loads(response.data)
+    
+    # Check all required fields are present
+    assert 'status' in data
+    assert 'version' in data
+    assert 'timestamp' in data
+    assert 'database' in data
+    assert 'uptime_seconds' in data
+    
+    # Validate timestamp format
+    datetime.fromisoformat(data['timestamp'])
+    
+    # Basic type checks
+    assert isinstance(data['uptime_seconds'], (int, float))
+    assert isinstance(data['status'], str)
+    assert isinstance(data['version'], str)
+    assert isinstance(data['database'], str)

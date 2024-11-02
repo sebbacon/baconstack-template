@@ -37,3 +37,42 @@ def test_health_check():
     
     # Validate response matches Pydantic model structure
     assert set(data.keys()) == {'status', 'version', 'timestamp', 'database', 'uptime_seconds'}
+from datetime import datetime
+from fastapi.testclient import TestClient
+from src.main import app
+
+client = TestClient(app)
+
+
+def test_root_endpoint():
+    """Test the root endpoint returns the expected welcome message"""
+    response = client.get('/')
+    assert response.status_code == 200
+    data = response.json()
+    assert data['message'] == 'Welcome to {{ project_name }}'
+
+
+def test_health_check():
+    """Test the health check endpoint returns expected structure"""
+    response = client.get('/health')
+    assert response.status_code == 200
+    data = response.json()
+    
+    # Check all required fields are present
+    assert 'status' in data
+    assert 'version' in data
+    assert 'timestamp' in data
+    assert 'database' in data
+    assert 'uptime_seconds' in data
+    
+    # Validate timestamp format
+    datetime.fromisoformat(data['timestamp'])
+    
+    # Basic type checks
+    assert isinstance(data['uptime_seconds'], float)
+    assert isinstance(data['status'], str)
+    assert isinstance(data['version'], str)
+    assert isinstance(data['database'], str)
+    
+    # Validate response matches Pydantic model structure
+    assert set(data.keys()) == {'status', 'version', 'timestamp', 'database', 'uptime_seconds'}
