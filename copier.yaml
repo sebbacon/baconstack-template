@@ -59,6 +59,9 @@ _skip_if_exists:
   - src/*
   - Procfile
 
+_exclude:
+  - tests/test_template_*.py
+
 # Tasks to run after template updates
 _tasks_post_update:
   - "just version" # Show new version after update
