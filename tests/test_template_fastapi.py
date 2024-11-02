@@ -19,6 +19,7 @@ def test_fastapi_template(temp_project_dir):
     run_copy(
         ".",
         temp_project_dir,
+        trust=True,
         data={
             "project_name": "test_project",
             "project_description": "A test project",
