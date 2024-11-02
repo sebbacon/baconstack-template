@@ -52,10 +52,6 @@ _tasks:
   - "just install" # This will create venv, install deps and generate requirements
   - "pre-commit install"
   - "git add ."
-  - "pre-commit run --all-files || true" # Run pre-commit hooks but allow modifications without failing
-  - "git add ." # Stage modified files after pre-commit
-  - "pre-commit run --all-files" # Re-run to ensure no further issues
-  - "git commit -m 'Initial commit from template'"
 
 _answers_file: .copier-answers.yml
 _skip_if_exists:
