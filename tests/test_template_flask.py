@@ -28,7 +28,6 @@ def test_flask_template(temp_project_dir):
             "domain": "test.example.com",
             "use_loki": True,
         },
-        force=True,
     )
 
     # Check that key files exist
